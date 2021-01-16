@@ -20,7 +20,7 @@ class DriversViewController: UIViewController {
         super.viewDidLoad()
         
         configureTableView()
-        tableView.register(DriverCell.self, forCellReuseIdentifier: K.CellIdentifier.driverCell)
+        tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.driverCell)
         
         // MARK: - Delegates
         tableView.dataSource = self
@@ -61,9 +61,9 @@ extension DriversViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.driverCell, for: indexPath) as! DriverCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.driverCell, for: indexPath) as! Formula1Cell
         cell.driver = Driver(permanentNumber: 75, givenName: "givenName", familyName: "familyName", url: "https://blablabla.com")
-        cell.raceName = "This is a race name!"
+        cell.bottomLabel = "This is a race name!"
         cell.accessoryType = .disclosureIndicator
         return cell
     }

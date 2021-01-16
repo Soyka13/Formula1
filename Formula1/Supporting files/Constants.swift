@@ -9,6 +9,6 @@ import Foundation
 
 struct K {
     struct CellIdentifier {
-        static let driverCell = "DriverCell"
+        static let driverCell = "Formula1Cell"
     }
 }

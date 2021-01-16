@@ -1,5 +1,5 @@
 //
-//  DriverCell.swift
+//  Formula1Cell.swift
 //  Formula1
 //
 //  Created by Olena Stepaniuk on 16.01.2021.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class DriverCell: UITableViewCell {
+class Formula1Cell: UITableViewCell {
     
     var driver: Driver? {
         didSet {
@@ -17,7 +17,7 @@ class DriverCell: UITableViewCell {
     
     var raceName: String? {
         didSet {
-            raceNameLabel.text = "\(raceName!)"
+            infoLabel.text = "\(raceName!)"
         }
     }
     
@@ -30,7 +30,7 @@ class DriverCell: UITableViewCell {
         return lbl
     }()
     
-    private let raceNameLabel: UILabel = {
+    private let infoLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
         lbl.font = UIFont.systemFont(ofSize: 16)
@@ -43,9 +43,9 @@ class DriverCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
         addSubview(driverInfoLabel)
-        addSubview(raceNameLabel)
+        addSubview(infoLabel)
         
-        let stackView = UIStackView(arrangedSubviews: [driverInfoLabel, raceNameLabel])
+        let stackView = UIStackView(arrangedSubviews: [driverInfoLabel, infoLabel])
         stackView.distribution = .fillEqually
         stackView.axis = .vertical
         stackView.spacing = 10

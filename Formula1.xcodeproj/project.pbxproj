@@ -15,7 +15,7 @@
 		929402E125B304A80089D6B9 /* DriversViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929402E025B304A80089D6B9 /* DriversViewController.swift */; };
 		929402E925B304EF0089D6B9 /* HistoricDataViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929402E825B304EF0089D6B9 /* HistoricDataViewController.swift */; };
 		929402ED25B308150089D6B9 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929402EC25B308150089D6B9 /* Constants.swift */; };
-		929402FA25B30F6B0089D6B9 /* DriverCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929402F925B30F6B0089D6B9 /* DriverCell.swift */; };
+		929402FA25B30F6B0089D6B9 /* Formula1Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929402F925B30F6B0089D6B9 /* Formula1Cell.swift */; };
 		929402FE25B338990089D6B9 /* Driver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929402FD25B338990089D6B9 /* Driver.swift */; };
 		9294030125B33FC00089D6B9 /* Race.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9294030025B33FC00089D6B9 /* Race.swift */; };
 /* End PBXBuildFile section */
@@ -31,7 +31,7 @@
 		929402E025B304A80089D6B9 /* DriversViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriversViewController.swift; sourceTree = "<group>"; };
 		929402E825B304EF0089D6B9 /* HistoricDataViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HistoricDataViewController.swift; sourceTree = "<group>"; };
 		929402EC25B308150089D6B9 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
-		929402F925B30F6B0089D6B9 /* DriverCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DriverCell.swift; sourceTree = "<group>"; };
+		929402F925B30F6B0089D6B9 /* Formula1Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formula1Cell.swift; sourceTree = "<group>"; };
 		929402FD25B338990089D6B9 /* Driver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Driver.swift; sourceTree = "<group>"; };
 		9294030025B33FC00089D6B9 /* Race.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Race.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -91,7 +91,7 @@
 			children = (
 				929402CF25B301B90089D6B9 /* Main.storyboard */,
 				929402D225B301BC0089D6B9 /* Assets.xcassets */,
-				929402F925B30F6B0089D6B9 /* DriverCell.swift */,
+				929402F925B30F6B0089D6B9 /* Formula1Cell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -187,7 +187,7 @@
 				9294030125B33FC00089D6B9 /* Race.swift in Sources */,
 				929402ED25B308150089D6B9 /* Constants.swift in Sources */,
 				929402FE25B338990089D6B9 /* Driver.swift in Sources */,
-				929402FA25B30F6B0089D6B9 /* DriverCell.swift in Sources */,
+				929402FA25B30F6B0089D6B9 /* Formula1Cell.swift in Sources */,
 				929402CA25B301B90089D6B9 /* AppDelegate.swift in Sources */,
 				929402CC25B301B90089D6B9 /* SceneDelegate.swift in Sources */,
 				929402E925B304EF0089D6B9 /* HistoricDataViewController.swift in Sources */,
