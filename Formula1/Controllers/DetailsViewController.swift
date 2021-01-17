@@ -1,14 +1,13 @@
 //
-//  DriversViewController.swift
+//  DetailsViewController.swift
 //  Formula1
 //
-//  Created by Olena Stepaniuk on 16.01.2021.
+//  Created by Olena Stepaniuk on 17.01.2021.
 //
 
 import UIKit
 
-class DriversViewController: UIViewController {
-    
+class DetailsViewController: UIViewController {
     
     var tableView: UITableView = {
         let tableView = UITableView()
@@ -16,31 +15,23 @@ class DriversViewController: UIViewController {
         return tableView
     }()
     
-    // MARK: - VC Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureTableView()
         tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
         
         // MARK: - Delegates
         tableView.dataSource = self
         tableView.delegate = self
-    }
-    
-    override func viewWillAppear(_ animated: Bool) {
-        super.viewWillAppear(animated)
-        navigationController?.setNavigationBarHidden(true, animated: animated)
-    }
-    
-    override func viewWillDisappear(_ animated: Bool) {
-        super.viewWillDisappear(animated)
-        navigationController?.setNavigationBarHidden(false, animated: animated)
+        
+        
+        title = "Details"
+        
     }
 }
 
 // MARK: - UI Configuration
-extension DriversViewController {
+extension DetailsViewController {
     private func configureTableView() {
         view.addSubview(tableView)
         
@@ -55,23 +46,46 @@ extension DriversViewController {
     }
 }
 
-// MARK: - Table View Data Source and Delegate Methods
-extension DriversViewController: UITableViewDelegate, UITableViewDataSource {
+// MARK: - Table View Data Source and Delegate methods
+extension DetailsViewController: UITableViewDelegate, UITableViewDataSource {
+    func numberOfSections(in tableView: UITableView) -> Int {
+        return 2
+    }
+    
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        if section == 0 {
+            return 1
+        }
+        
+        return 10
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        if indexPath.section == 0 {
+            let infoCell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: indexPath) as! Formula1Cell
+            infoCell.topLabelText = "1898-5475-3  jfhdjkfh"
+            infoCell.bottomLabelText = "hjdkshf kjdhfkdfj"
+            infoCell.accessoryType = .disclosureIndicator
+            return infoCell
+        }
+        
         let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: indexPath) as! Formula1Cell
-        cell.topLabelText = "dhjkgfdkjfghdkjfghdkjfhg kjfdkghfdkj kjdfhgkjdfghd"
-        cell.bottomLabelText = "This is a race name!"
+        cell.topLabelText = "4563874568374568347 48574"
+        cell.bottomLabelText = "sdfsdfsdf kjdhfkdfj"
         cell.accessoryType = .disclosureIndicator
+        
         return cell
     }
     
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let vc = storyboard.instantiateViewController(withIdentifier: "DetailsViewController")
-        navigationController?.pushViewController(vc, animated: true)
+    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+        if section == 1 {
+            return "Results"
+        }
+        
+        return nil
+    }
+    
+    func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
+        return 50
     }
 }

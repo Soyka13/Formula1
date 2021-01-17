@@ -9,19 +9,19 @@ import UIKit
 
 class Formula1Cell: UITableViewCell {
     
-    var driver: Driver? {
+    var topLabelText: String? {
         didSet {
-            driverInfoLabel.text = "\(driver!.givenName) \(driver!.familyName) \( driver!.permanentNumber)"
+            topLabel.text = topLabelText
         }
     }
     
-    var raceName: String? {
+    var bottomLabelText: String? {
         didSet {
-            infoLabel.text = "\(raceName!)"
+            bottomLabel.text = bottomLabelText
         }
     }
     
-    private let driverInfoLabel: UILabel = {
+    private let topLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
         lbl.font = UIFont.systemFont(ofSize: 18)
@@ -30,7 +30,7 @@ class Formula1Cell: UITableViewCell {
         return lbl
     }()
     
-    private let infoLabel: UILabel = {
+    private let bottomLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
         lbl.font = UIFont.systemFont(ofSize: 16)
@@ -42,10 +42,10 @@ class Formula1Cell: UITableViewCell {
     override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         
-        addSubview(driverInfoLabel)
-        addSubview(infoLabel)
+        addSubview(topLabel)
+        addSubview(bottomLabel)
         
-        let stackView = UIStackView(arrangedSubviews: [driverInfoLabel, infoLabel])
+        let stackView = UIStackView(arrangedSubviews: [topLabel, bottomLabel])
         stackView.distribution = .fillEqually
         stackView.axis = .vertical
         stackView.spacing = 10
@@ -59,6 +59,8 @@ class Formula1Cell: UITableViewCell {
             stackView.bottomAnchor.constraint(equalTo: self.safeAreaLayoutGuide.bottomAnchor, constant: -20),
             stackView.trailingAnchor.constraint(equalTo: self.safeAreaLayoutGuide.trailingAnchor, constant: 20)
         ])
+        
+        
     }
     
     required init?(coder: NSCoder) {

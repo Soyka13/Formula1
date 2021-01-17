@@ -18,6 +18,7 @@
 		929402FA25B30F6B0089D6B9 /* Formula1Cell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929402F925B30F6B0089D6B9 /* Formula1Cell.swift */; };
 		929402FE25B338990089D6B9 /* Driver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929402FD25B338990089D6B9 /* Driver.swift */; };
 		9294030125B33FC00089D6B9 /* Race.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9294030025B33FC00089D6B9 /* Race.swift */; };
+		929C7D1725B45270006313A7 /* DetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 929C7D1625B45270006313A7 /* DetailsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -34,6 +35,7 @@
 		929402F925B30F6B0089D6B9 /* Formula1Cell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formula1Cell.swift; sourceTree = "<group>"; };
 		929402FD25B338990089D6B9 /* Driver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Driver.swift; sourceTree = "<group>"; };
 		9294030025B33FC00089D6B9 /* Race.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Race.swift; sourceTree = "<group>"; };
+		929C7D1625B45270006313A7 /* DetailsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,6 +103,7 @@
 			children = (
 				929402E025B304A80089D6B9 /* DriversViewController.swift */,
 				929402E825B304EF0089D6B9 /* HistoricDataViewController.swift */,
+				929C7D1625B45270006313A7 /* DetailsViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -186,6 +189,7 @@
 			files = (
 				9294030125B33FC00089D6B9 /* Race.swift in Sources */,
 				929402ED25B308150089D6B9 /* Constants.swift in Sources */,
+				929C7D1725B45270006313A7 /* DetailsViewController.swift in Sources */,
 				929402FE25B338990089D6B9 /* Driver.swift in Sources */,
 				929402FA25B30F6B0089D6B9 /* Formula1Cell.swift in Sources */,
 				929402CA25B301B90089D6B9 /* AppDelegate.swift in Sources */,
