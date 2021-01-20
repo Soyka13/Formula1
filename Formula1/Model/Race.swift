@@ -8,7 +8,7 @@
 import Foundation
 
 struct Result: Decodable {
-    let Driver: Driver
+    let Driver: Pilot
 }
 
 struct Race: Decodable {
@@ -20,6 +20,10 @@ struct RaceTable: Decodable {
     let Races: [Race]
 }
 
-struct MRData: Decodable {
+struct RData: Decodable {
     let RaceTable: RaceTable
+}
+
+struct MRData: Decodable {
+    let MRData: RData
 }

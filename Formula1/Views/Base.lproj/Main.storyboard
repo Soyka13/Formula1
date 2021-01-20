@@ -24,10 +24,10 @@
             </objects>
             <point key="canvasLocation" x="1576.8115942028987" y="353.57142857142856"/>
         </scene>
-        <!--Drivers View Controller-->
+        <!--Pilots View Controller-->
         <scene sceneID="r9L-fF-tf9">
             <objects>
-                <viewController id="qsx-we-0M8" customClass="DriversViewController" customModule="Formula1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="qsx-we-0M8" customClass="PilotsViewController" customModule="Formula1" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="gDo-td-wrk">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

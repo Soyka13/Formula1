@@ -7,8 +7,8 @@
 
 import Foundation
 
-struct Driver: Decodable {
-    var permanentNumber: Int
+struct Pilot: Decodable {
+    var permanentNumber: String
     var givenName: String
     var familyName: String
     var url: String
