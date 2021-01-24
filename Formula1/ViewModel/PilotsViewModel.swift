@@ -10,27 +10,23 @@ import RxSwift
 import RxCocoa
 
 class PilotsViewModel {
-    let pilots: PublishSubject<[Result]> = PublishSubject()
-    var raceName: String?
-    
+    let pilots: PublishSubject<[PilotModel]> = PublishSubject()
     let disposeBag = DisposeBag()
     
-    func fetchNewPilots() {
-        ApiClient.getPilots()
-            .observe(on: MainScheduler.instance)
-            .subscribe(
-                onNext: { [weak self](data) in
-                    guard let self = self else { return }
-//                    print("!!!!!!! Data: \(data)")
-                    self.raceName = data.MRData.RaceTable.Races[0].raceName
-                    self.pilots.onNext(data.MRData.RaceTable.Races[0].Results)
-                    self.pilots.onCompleted()
-                },
-                onError: { (error) in
-                    print(error)
+    func fetchData(apiRouterCase: ApiRouter) {
+        ApiClient.request(apiRouterCase) { (response: Result<MRData, ApiError>) in
+            switch response {
+            case .success(let data):
+                var newPilots = [PilotModel]()
+                for i in 0..<data.MRData.RaceTable.Races.count {
+                    newPilots.append(contentsOf: data.MRData.RaceTable.Races[i].getPilotsDataModel())
                 }
-            )
-            .disposed(by: disposeBag)
+          
+                self.pilots.onNext(newPilots)
+                self.pilots.onCompleted()
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        }
     }
-    
 }

@@ -10,9 +10,7 @@ import Foundation
 class ItemCellViewModel {
     public var item: Decodable
     
-    public var raceName: String?
-    
-    init(item: Decodable, raceName: String? = nil) {
+    init(item: Decodable) {
         self.item = item
     }
 }
