@@ -28,20 +28,33 @@ struct Formila1ApiConstants {
 
 enum ApiRouter: URLRequestConvertible {
     
-    case getPilots
+    case getPilotsWinnersInSeason(year: String)
+    
+    case getPilotsWinnersInSeasonInRound(year: String, round: String)
+    
+    case getPilotsInSeasonInRound(year: String, round: String)
+    
+    case getPilotsInSeason(year: String)
     
     private var path: String {
         switch self {
-        
-        case .getPilots:
-            return "api/f1/current/last/results.json"
+        case .getPilotsWinnersInSeason(year: let year):
+            return "api/f1/\(year)/results/1.json"
+        case .getPilotsWinnersInSeasonInRound(year: let year, round: let round):
+            return "api/f1/\(year)/\(round)/results/1.json"
+        case .getPilotsInSeason(year: let year):
+            return "api/f1/\(year)/results.json"
+        case .getPilotsInSeasonInRound(year: let year, round: let round):
+            return "api/f1/\(year)/\(round)/results.json"
         }
+        
     }
     
     private var method: HTTPMethod {
         switch self {
-        case .getPilots:
+        default:
             return .get
+            
         }
     }
     
@@ -63,29 +76,5 @@ enum ApiRouter: URLRequestConvertible {
         }()
         
         return try encoding.encode(request, with: nil)
-    }
-}
-
-class ApiClient {
-    
-    static func getPilots() -> Observable<MRData> {
-        return request(ApiRouter.getPilots)
-    }
-    
-    private static func request<T: Decodable>(_ urlConvertible: URLRequestConvertible) -> Observable<T> {
-        return Observable.create { (observer) -> Disposable in
-            let request = AF.request(urlConvertible).responseDecodable { (response: AFDataResponse<T>) in
-                switch response.result {
-                case .success(let value):
-                    observer.onNext(value)
-                    observer.onCompleted()
-                case .failure(let error):
-                    observer.onError(error)
-                }
-            }
-            return Disposables.create {
-                request.cancel()
-            }
-        }
     }
 }
