@@ -10,5 +10,5 @@ target 'Formula1' do
     pod 'RxSwift', '6.0.0'
     pod 'RxCocoa', '6.0.0'
     pod 'Alamofire', '~> 5.2'
-
+    pod 'RxDataSources'
 end
