@@ -43,21 +43,16 @@ class DetailsViewController: UIViewController {
         super.viewDidLoad()
         configureTableView()
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
-        //        tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
         bindTableView()
         
         title = "Details"
         
         print("\(year) \(round)")
         
-        
-        
         let dataSource = DetailsViewController.dataSource()
         
         sections.bind(to: tableView.rx.items(dataSource: dataSource))
             .disposed(by: disposeBag)
-        
-        //        viewModel.fetchNewPilots(apiRouterCase: .getPilotsInSeasonInRound(year: year, round: round))
     }
     
     func bindTableView() {
@@ -73,7 +68,6 @@ class DetailsViewController: UIViewController {
             }).disposed(by: disposeBag)
         
         viewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: year, round: round))
-//        viewModel.fetchNewPilots(apiRouterCase: .getPilotsInSeasonInRound(year: year, round: round))
     }
 }
 
@@ -96,48 +90,25 @@ extension DetailsViewController {
 extension DetailsViewController {
     static func dataSource() -> RxTableViewSectionedReloadDataSource<SectionModel> {
         return RxTableViewSectionedReloadDataSource<SectionModel>( configureCell: { (dataSources, tableView, ip, _) -> UITableViewCell in
-                        switch dataSources[ip] {
+            switch dataSources[ip] {
             
-                        case .raceSectionItem(item: let item):
-                            if ip.section == 0 {
-                                let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: ip) as! Formula1Cell
-                                cell.topLabelText = item.raceName + "-" + item.round
-                                cell.bottomLabelText = item.raceName + "   " + item.date
-                                return cell
-                            }
-                            return UITableViewCell()
-                        case .pilotSectionItem(item: let item):
-                            if ip.section == 1 {
-                                let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: ip) as! Formula1Cell
-                                cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
-                                cell.bottomLabelText = item.time
-                                return cell
-                            }
-                            return UITableViewCell()
-                        }
-//            if ip.section < 1 {
-//                switch dataSources[ip] {
-//
-//                case .raceSectionItem(item: let item):
-//                    let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: ip) as! Formula1Cell
-//                    cell.topLabelText = item.raceName + "-" + item.round
-//                    cell.bottomLabelText = item.raceName + "   " + item.date
-//                    return cell
-//                default:
-//                    return UITableViewCell()
-//                }
-//            } else {
-//                switch dataSources[ip] {
-//                case .pilotSectionItem(item: let item):
-//                        let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: ip) as! Formula1Cell
-//                        cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
-//                        cell.bottomLabelText = item.time
-//                        return cell
-//                default:
-//                    return UITableViewCell()
-//                }
-//            }
-            
+            case .raceSectionItem(item: let item):
+                if ip.section == 0 {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: ip) as! Formula1Cell
+                    cell.topLabelText = item.raceName + "-" + item.round
+                    cell.bottomLabelText = item.raceName + "   " + item.date
+                    return cell
+                }
+                return UITableViewCell()
+            case .pilotSectionItem(item: let item):
+                if ip.section == 1 {
+                    let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: ip) as! Formula1Cell
+                    cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
+                    cell.bottomLabelText = item.time
+                    return cell
+                }
+                return UITableViewCell()
+            }
             
         },  titleForHeaderInSection: { dataSource, index in
             let section = dataSource[index]
@@ -199,43 +170,6 @@ extension SectionModel {
 
 // MARK: - Table View Data Source and Delegate methods
 extension DetailsViewController: UITableViewDelegate {
-    //    func numberOfSections(in tableView: UITableView) -> Int {
-    //        return 2
-    //    }
-    //
-    //    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    //        if section == 0 {
-    //            return 1
-    //        }
-    //
-    //        return 10
-    //    }
-    //
-    //    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    //        if indexPath.section == 0 {
-    //            let infoCell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: indexPath) as! Formula1Cell
-    //            infoCell.topLabelText = "1898-5475-3  jfhdjkfh"
-    //            infoCell.bottomLabelText = "hjdkshf kjdhfkdfj"
-    //            infoCell.accessoryType = .disclosureIndicator
-    //            return infoCell
-    //        }
-    //
-    //        let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: indexPath) as! Formula1Cell
-    //        cell.topLabelText = "4563874568374568347 48574"
-    //        cell.bottomLabelText = "sdfsdfsdf kjdhfkdfj"
-    //        cell.accessoryType = .disclosureIndicator
-    //
-    //        return cell
-    //    }
-    //
-    //    func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-    //        if section == 1 {
-    //            return "Results"
-    //        }
-    //
-    //        return nil
-    //    }
-    
     func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
         return 50
     }

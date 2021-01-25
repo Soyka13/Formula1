@@ -26,11 +26,6 @@ class PilotsViewController: UIViewController {
         super.viewDidLoad()
         
         configureTableView()
-//        tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
-        
-        // MARK: - Delegates
-//        tableView.dataSource = nil
-//        tableView.delegate = self
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         bindTableView()
@@ -48,45 +43,33 @@ class PilotsViewController: UIViewController {
     
     private func bindTableView() {
         tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
-    
+        
         pilotsViewModel.pilots.bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { (row,item,cell) in
-            let driver = item.Driver
-
-            cell.topLabelText = "\(driver.givenName) \(driver.familyName) \(driver.permanentNumber)"
-            cell.bottomLabelText = self.pilotsViewModel.raceName ?? ""
+            cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
+            cell.bottomLabelText = item.raceName
             cell.accessoryType = .disclosureIndicator
         }
         .disposed(by: disposeBag)
-//
-//        pilotsViewModel.raceName.bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { (row,item,cell) in
-//            cell.bottomLabelText = String(item)
-//        }
-//        .disposed(by: disposeBag)
         
         
-        tableView.rx.modelSelected(Result.self).subscribe(onNext: { item in
-            print(item)
-        }).disposed(by: disposeBag)
+        tableView.rx.modelSelected(PilotModel.self)
+            .subscribe(onNext: { item in
+                print(item)
+                let vc = DetailsViewController(year: item.season, round: item.round)
+                self.navigationController?.pushViewController(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
         
-        pilotsViewModel.fetchNewPilots()
+        tableView.rx.itemSelected
+            .subscribe { (indexPath) in
+            if let ip = indexPath.element {
+                self.tableView.deselectRow(at: ip, animated: true)
+            }
+        }
+            .disposed(by: disposeBag)
+
+        pilotsViewModel.fetchData(apiRouterCase: .getPilotsWinnersInSeason(year: "2020"))
     }
-    
-//    private func updateUI() {
-//        ApiClient.getDrivers()
-//            .observe(on: MainScheduler.instance)
-//            .subscribe(
-//                onNext: { (data) in
-//                    print("!!!!!!! Data: \(data)")
-//                    let familyName = Observable.of(data.MRData.RaceTable.Races[0].Results[0].Driver.familyName)
-//                    let givenName = Observable.of(data.MRData.RaceTable.Races[0].Results[0].Driver.givenName)
-//            },
-//                onError: { (error) in
-//                    print(error)
-//                }
-//            )
-//            .disposed(by: disposeBag)
-//    }
-    
 }
 
 // MARK: - UI Configuration
@@ -106,27 +89,9 @@ extension PilotsViewController {
 }
 
 // MARK: - Table View Data Source and Delegate Methods
-//extension PilotsViewController: UITableViewDelegate, UITableViewDataSource {
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return 1
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        let cell = tableView.dequeueReusableCell(withIdentifier: K.CellIdentifier.formula1Cell, for: indexPath) as! Formula1Cell
-//        cell.topLabelText = "dhjkgfdkjfghdkjfghdkjfhg kjfdkghfdkj kjdfhgkjdfghd"
-//        cell.bottomLabelText = "This is a race name!"
-//        cell.accessoryType = .disclosureIndicator
-//        return cell
-//    }
-//
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-//        let vc = storyboard.instantiateViewController(withIdentifier: "DetailsViewController")
-//        navigationController?.pushViewController(vc, animated: true)
-//    }
-//}
-
-
 extension PilotsViewController: UITableViewDelegate {
-    
+//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+////        tableView.deselectRow(at: indexPath, animated: true)
+//
+//    }
 }

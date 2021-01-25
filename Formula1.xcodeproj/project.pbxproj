@@ -24,6 +24,7 @@
 		92D1D17F25BDC182005467FA /* Formula1Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D1D17E25BDC182005467FA /* Formula1Model.swift */; };
 		92D1D18225BDC1AD005467FA /* PilotModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D1D18125BDC1AD005467FA /* PilotModel.swift */; };
 		92D1D18525BDC1E2005467FA /* ApiError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D1D18425BDC1E2005467FA /* ApiError.swift */; };
+		92D1D1B525BDE36D005467FA /* SearchViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 92D1D1B425BDE36D005467FA /* SearchViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,6 +48,7 @@
 		92D1D17E25BDC182005467FA /* Formula1Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formula1Model.swift; sourceTree = "<group>"; };
 		92D1D18125BDC1AD005467FA /* PilotModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PilotModel.swift; sourceTree = "<group>"; };
 		92D1D18425BDC1E2005467FA /* ApiError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiError.swift; sourceTree = "<group>"; };
+		92D1D1B425BDE36D005467FA /* SearchViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchViewController.swift; sourceTree = "<group>"; };
 		D7CB1A570B8DC8F2082F31F2 /* Pods_Formula1.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Formula1.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -145,6 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				929402E025B304A80089D6B9 /* PilotsViewController.swift */,
+				92D1D1B425BDE36D005467FA /* SearchViewController.swift */,
 				929C7D1625B45270006313A7 /* DetailsViewController.swift */,
 			);
 			path = Controllers;
@@ -307,6 +310,7 @@
 				929C7D2B25B47E03006313A7 /* APIClient.swift in Sources */,
 				929402FA25B30F6B0089D6B9 /* Formula1Cell.swift in Sources */,
 				92D1D18525BDC1E2005467FA /* ApiError.swift in Sources */,
+				92D1D1B525BDE36D005467FA /* SearchViewController.swift in Sources */,
 				929402CA25B301B90089D6B9 /* AppDelegate.swift in Sources */,
 				929402CC25B301B90089D6B9 /* SceneDelegate.swift in Sources */,
 				92D1D17F25BDC182005467FA /* Formula1Model.swift in Sources */,

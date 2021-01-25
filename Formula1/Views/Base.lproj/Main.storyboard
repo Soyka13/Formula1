@@ -8,10 +8,10 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Historic Data View Controller-->
+        <!--Search View Controller-->
         <scene sceneID="lE1-mN-tbY">
             <objects>
-                <viewController id="v3N-w7-nWQ" customClass="HistoricDataViewController" customModule="Formula1" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="v3N-w7-nWQ" customClass="SearchViewController" customModule="Formula1" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="j0T-bW-bBa">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
