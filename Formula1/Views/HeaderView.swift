@@ -24,7 +24,7 @@ class HeaderView: UIView {
     private let topLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
-        lbl.font = UIFont.systemFont(ofSize: 24, weight: .bold)
+        lbl.font = UIFont.systemFont(ofSize: 22, weight: .bold)
         lbl.numberOfLines = 0
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
@@ -33,7 +33,7 @@ class HeaderView: UIView {
     private let bottomLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
-        lbl.font = UIFont.systemFont(ofSize: 20, weight: .bold)
+        lbl.font = UIFont.systemFont(ofSize: 18, weight: .bold)
         lbl.numberOfLines = 0
         lbl.translatesAutoresizingMaskIntoConstraints = false
         return lbl
@@ -62,7 +62,6 @@ class HeaderView: UIView {
         addSubview(verticalStackView)
         
         imageView.widthAnchor.constraint(equalToConstant: 20).isActive = true
-//        imageView.heightAnchor.constraint(equalToConstant: 20).isActive = true
         
         let horizontalStackView = UIStackView(arrangedSubviews: [verticalStackView, imageView])
         horizontalStackView.distribution = .fill

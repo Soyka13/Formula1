@@ -8,8 +8,10 @@
 import UIKit
 import RxSwift
 import RxCocoa
+import WebKit
+import SafariServices
 
-class DetailsViewController: UIViewController {
+class DetailsViewController: UIViewController, WKNavigationDelegate, UITableViewDelegate {
     
     var topView: HeaderView = {
         let hv = HeaderView()
@@ -37,6 +39,8 @@ class DetailsViewController: UIViewController {
     
     var viewModel = PilotsViewModel()
     
+    var webView: WKWebView!
+    
     let disposeBag = DisposeBag()
     
     init(year: String, round: String) {
@@ -49,13 +53,24 @@ class DetailsViewController: UIViewController {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func loadView() {
+        webView = WKWebView()
+        webView.navigationDelegate = self
+        view = webView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
         layout()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
+        topView.addGestureRecognizer(tap)
         title = "Details"
+        
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
+        
         bindTableView()
+        bindRowSelected()
     }
     
     func bindTableView() {
@@ -65,12 +80,42 @@ class DetailsViewController: UIViewController {
             self.topView.topLabelText = item.raceName + "-" + item.round
             self.topView.bottomLabelText = item.raceName + "   " + item.date
             cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
-            cell.bottomLabelText = item.raceName
+            cell.bottomLabelText = item.time
             cell.accessoryType = .disclosureIndicator
         }
         .disposed(by: disposeBag)
         
         viewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: year, round: round))
+    }
+    
+    private func bindRowSelected() {
+        tableView.rx.modelSelected(PilotModel.self)
+            .subscribe(onNext: { item in
+                let config = SFSafariViewController.Configuration()
+                config.entersReaderIfAvailable = true
+                
+                let vc = SFSafariViewController(url: URL(string: item.url)!, configuration: config)
+                self.present(vc, animated: true)
+            })
+            .disposed(by: disposeBag)
+        
+        tableView.rx.itemSelected
+            .subscribe { (indexPath) in
+                if let ip = indexPath.element {
+                    self.tableView.deselectRow(at: ip, animated: true)
+                }
+            }
+            .disposed(by: disposeBag)
+    }
+    
+    @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
+        print("!!!!! Touchhhh")
+        let config = SFSafariViewController.Configuration()
+        config.entersReaderIfAvailable = true
+        
+        let vc = SFSafariViewController(url: URL(string: viewModel.pilots.value[0].raceUrl)!, configuration: config)
+        self.present(vc, animated: true)
+        
     }
 }
 
@@ -100,10 +145,6 @@ extension DetailsViewController {
     }
 }
 
-// MARK: - UITableView Delegate methods
-extension DetailsViewController: UITableViewDelegate {
-}
-
 enum LinePosition {
     case top
     case bottom
@@ -115,11 +156,11 @@ extension UIView {
         lineView.backgroundColor = color
         lineView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(lineView)
-
+        
         let metrics = ["width" : NSNumber(value: width)]
         let views = ["lineView" : lineView]
         self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[lineView]|", options:NSLayoutConstraint.FormatOptions(rawValue: 0), metrics:metrics, views:views))
-
+        
         switch position {
         case .top:
             self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[lineView(width)]", options:NSLayoutConstraint.FormatOptions(rawValue: 0), metrics:metrics, views:views))
