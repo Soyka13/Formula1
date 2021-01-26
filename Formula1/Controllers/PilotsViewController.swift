@@ -62,13 +62,13 @@ class PilotsViewController: UIViewController {
         
         tableView.rx.itemSelected
             .subscribe { (indexPath) in
-            if let ip = indexPath.element {
-                self.tableView.deselectRow(at: ip, animated: true)
+                if let ip = indexPath.element {
+                    self.tableView.deselectRow(at: ip, animated: true)
+                }
             }
-        }
             .disposed(by: disposeBag)
-
-        pilotsViewModel.fetchData(apiRouterCase: .getPilotsWinnersInSeason(year: "2020"))
+        
+        pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeason(year: "2020"))
     }
 }
 
@@ -90,8 +90,5 @@ extension PilotsViewController {
 
 // MARK: - Table View Data Source and Delegate Methods
 extension PilotsViewController: UITableViewDelegate {
-//    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-////        tableView.deselectRow(at: indexPath, animated: true)
-//
-//    }
+    
 }

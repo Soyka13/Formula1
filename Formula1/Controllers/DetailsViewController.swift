@@ -58,7 +58,6 @@ class DetailsViewController: UIViewController {
     func bindTableView() {
         tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
         
-        
         viewModel.pilots
             .observe(on: MainScheduler.instance)
             .subscribe(onNext: { items in
