@@ -8,7 +8,7 @@
 import Foundation
 
 struct Pilot: Decodable {
-    var permanentNumber: String
+    var permanentNumber: String?
     var givenName: String
     var familyName: String
     var url: String
@@ -45,6 +45,7 @@ struct RaceTable: Decodable {
 
 struct RData: Decodable {
     let RaceTable: RaceTable
+    let total: String
 }
 
 struct MRData: Decodable {

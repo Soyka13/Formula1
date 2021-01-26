@@ -23,7 +23,7 @@ struct PilotModel : Decodable {
         self.raceName = raceName
         self.givenName = driver.givenName
         self.familyName = driver.familyName
-        self.permanentNumber = driver.permanentNumber
+        self.permanentNumber = driver.permanentNumber ?? ""
         self.url = driver.url
         self.season = season
         self.round = round
