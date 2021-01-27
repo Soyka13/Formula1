@@ -11,7 +11,6 @@ import RxCocoa
 
 class PilotsViewModel {
     let pilots: BehaviorRelay<[PilotModel]> = BehaviorRelay(value: [])
-    let disposeBag = DisposeBag()
     
     func fetchData(apiRouterCase: ApiRouter) {
         ApiClient.request(apiRouterCase) { (response: Result<MRData, ApiError>) in

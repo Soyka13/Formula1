@@ -1,5 +1,5 @@
 //
-//  DriversViewController.swift
+//  PilotsViewController.swift
 //  Formula1
 //
 //  Created by Olena Stepaniuk on 16.01.2021.
@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class PilotsViewController: UIViewController {
+class PilotsViewController: UIViewController, UITableViewDelegate {
     
     var tableView: UITableView = {
         let tableView = UITableView()
@@ -19,17 +19,20 @@ class PilotsViewController: UIViewController {
     
     let disposeBag = DisposeBag()
     
-    let pilotsViewModel = PilotsViewModel()
-    
+    let viewModel = PilotsViewModel()
     
     // MARK: - VC Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         configureTableView()
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
+        tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
+        
         bindTableView()
+        bindRowSelected()
+        
+        viewModel.fetchData(apiRouterCase: .getPilotsWinnersInSeason(year: "2020"))
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -43,16 +46,15 @@ class PilotsViewController: UIViewController {
     }
     
     private func bindTableView() {
-        tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
-        
-        pilotsViewModel.pilots.bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { (row,item,cell) in
+        viewModel.pilots.bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { (row,item,cell) in
             cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
             cell.bottomLabelText = item.raceName
             cell.accessoryType = .disclosureIndicator
         }
         .disposed(by: disposeBag)
-        
-        
+    }
+    
+    private func bindRowSelected() {
         tableView.rx.modelSelected(PilotModel.self)
             .subscribe(onNext: { item in
                 print(item)
@@ -68,8 +70,6 @@ class PilotsViewController: UIViewController {
                 }
             }
             .disposed(by: disposeBag)
-        
-        pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeason(year: "2020"))
     }
 }
 
@@ -87,9 +87,4 @@ extension PilotsViewController {
         
         tableView.contentInset.bottom = view.safeAreaInsets.bottom
     }
-}
-
-// MARK: - Table View Data Source and Delegate Methods
-extension PilotsViewController: UITableViewDelegate {
-    
 }

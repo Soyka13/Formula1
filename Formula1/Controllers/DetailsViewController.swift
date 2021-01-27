@@ -8,18 +8,17 @@
 import UIKit
 import RxSwift
 import RxCocoa
-import WebKit
 import SafariServices
 
-class DetailsViewController: UIViewController, WKNavigationDelegate, UITableViewDelegate {
+class DetailsViewController: UIViewController, UITableViewDelegate {
     
-    var topView: HeaderView = {
+    private var topView: HeaderView = {
         let hv = HeaderView()
         hv.translatesAutoresizingMaskIntoConstraints = false
         return hv
     }()
     
-    var headerForTable: UILabel = {
+    private var headerForTable: UILabel = {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)
@@ -27,7 +26,7 @@ class DetailsViewController: UIViewController, WKNavigationDelegate, UITableView
         return label
     }()
     
-    var tableView: UITableView = {
+    private var tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.layer.borderWidth = 1
@@ -38,8 +37,6 @@ class DetailsViewController: UIViewController, WKNavigationDelegate, UITableView
     var year = ""
     
     var viewModel = PilotsViewModel()
-    
-    var webView: WKWebView!
     
     let disposeBag = DisposeBag()
     
@@ -53,12 +50,7 @@ class DetailsViewController: UIViewController, WKNavigationDelegate, UITableView
         fatalError("init(coder:) has not been implemented")
     }
     
-    override func loadView() {
-        webView = WKWebView()
-        webView.navigationDelegate = self
-        view = webView
-    }
-    
+    // MARK: - VC Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
@@ -68,14 +60,15 @@ class DetailsViewController: UIViewController, WKNavigationDelegate, UITableView
         title = "Details"
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
+        tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
         
         bindTableView()
         bindRowSelected()
+        
+        viewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: year, round: round))
     }
     
     func bindTableView() {
-        tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
-        
         viewModel.pilots.asObservable().bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { (row,item,cell) in
             self.topView.topLabelText = item.raceName + "-" + item.round
             self.topView.bottomLabelText = item.raceName + "   " + item.date
@@ -84,8 +77,6 @@ class DetailsViewController: UIViewController, WKNavigationDelegate, UITableView
             cell.accessoryType = .disclosureIndicator
         }
         .disposed(by: disposeBag)
-        
-        viewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: year, round: round))
     }
     
     private func bindRowSelected() {
@@ -142,32 +133,5 @@ extension DetailsViewController {
         ])
         
         tableView.contentInset.bottom = view.safeAreaInsets.bottom
-    }
-}
-
-enum LinePosition {
-    case top
-    case bottom
-}
-
-extension UIView {
-    func addLine(position: LinePosition, color: UIColor, width: Double) {
-        let lineView = UIView()
-        lineView.backgroundColor = color
-        lineView.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(lineView)
-        
-        let metrics = ["width" : NSNumber(value: width)]
-        let views = ["lineView" : lineView]
-        self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[lineView]|", options:NSLayoutConstraint.FormatOptions(rawValue: 0), metrics:metrics, views:views))
-        
-        switch position {
-        case .top:
-            self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:|[lineView(width)]", options:NSLayoutConstraint.FormatOptions(rawValue: 0), metrics:metrics, views:views))
-            break
-        case .bottom:
-            self.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[lineView(width)]|", options:NSLayoutConstraint.FormatOptions(rawValue: 0), metrics:metrics, views:views))
-            break
-        }
     }
 }

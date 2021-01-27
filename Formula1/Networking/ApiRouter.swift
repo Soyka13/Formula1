@@ -29,13 +29,13 @@ struct Formula1ApiConstants {
 
 enum ApiRouter: URLRequestConvertible {
     
-    case getPilotsWinnersInSeason(year: String, limit: Int = 50, offset: Int = 0)
+    case getPilotsWinnersInSeason(year: String, limit: Int = 1000, offset: Int = 0)
     
-    case getPilotsWinnersInSeasonInRound(year: String, round: String, limit: Int = 50, offset: Int = 0)
+    case getPilotsWinnersInSeasonInRound(year: String, round: String, limit: Int = 1000, offset: Int = 0)
     
-    case getPilotsInSeasonInRound(year: String, round: String, limit: Int = 50, offset: Int = 0)
+    case getPilotsInSeasonInRound(year: String, round: String, limit: Int = 1000, offset: Int = 0)
     
-    case getPilotsInSeason(year: String, limit: Int = 50, offset: Int = 0)
+    case getPilotsInSeason(year: String, limit: Int = 1000, offset: Int = 0)
     
     private var path: String {
         switch self {
@@ -48,14 +48,12 @@ enum ApiRouter: URLRequestConvertible {
         case .getPilotsInSeasonInRound(year: let year, round: let round, limit: _, offset: _):
             return "api/f1/\(year)/\(round)/results.json"
         }
-        
     }
     
     private var method: HTTPMethod {
         switch self {
         default:
             return .get
-            
         }
     }
     

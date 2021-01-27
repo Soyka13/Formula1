@@ -9,11 +9,11 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SearchViewController: UIViewController {
+class SearchViewController: UIViewController, UITableViewDelegate {
     
-    let stackView = UIStackView()
+    private let stackView = UIStackView()
     
-    let dateTextField: UITextField = {
+    private let dateTextField: UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.textAlignment = .center
@@ -23,9 +23,9 @@ class SearchViewController: UIViewController {
         return tf
     }()
     
-    let datePicker = UIPickerView()
+    private let datePicker = UIPickerView()
     
-    let roundTextField: UITextField = {
+    private let roundTextField: UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.textAlignment = .center
@@ -35,27 +35,27 @@ class SearchViewController: UIViewController {
         return tf
     }()
     
-    let tableView: UITableView = {
+    private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
-    let viewModel = PilotsViewModel()
+    private let viewModel = PilotsViewModel()
     
-    let roundPicker = UIPickerView()
+    private let roundPicker = UIPickerView()
     
+    // TODO: - Harcoded part!
     let startYear = 1950
     let currentYear = Calendar.current.component(.year, from: Date())
-    
     var numberOfRounds = 10
-
+    
+    // MARK: - VC Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        
         
         datePicker.dataSource = self
         datePicker.delegate = self
@@ -67,8 +67,10 @@ class SearchViewController: UIViewController {
         roundTextField.delegate = self
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
+        tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
         
         bindTableView()
+        bindRowSelected()
         
         viewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: dateTextField.text ?? "1950", round: roundTextField.text ?? "1"))
     }
@@ -83,18 +85,16 @@ class SearchViewController: UIViewController {
         navigationController?.setNavigationBarHidden(false, animated: animated)
     }
     
-  
     private func bindTableView() {
-        tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
-        
         viewModel.pilots.asObservable().bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { (row,item,cell) in
             cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
             cell.bottomLabelText = item.raceName
             cell.accessoryType = .disclosureIndicator
         }
         .disposed(by: disposeBag)
-        
-        
+    }
+    
+    private func bindRowSelected() {
         tableView.rx.modelSelected(PilotModel.self)
             .subscribe(onNext: { item in
                 print(item)
@@ -105,10 +105,10 @@ class SearchViewController: UIViewController {
         
         tableView.rx.itemSelected
             .subscribe { (indexPath) in
-            if let ip = indexPath.element {
-                self.tableView.deselectRow(at: ip, animated: true)
+                if let ip = indexPath.element {
+                    self.tableView.deselectRow(at: ip, animated: true)
+                }
             }
-        }
             .disposed(by: disposeBag)
     }
 }
@@ -198,7 +198,7 @@ extension SearchViewController: UIPickerViewDataSource, UIPickerViewDelegate {
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         if pickerView == datePicker {
             return currentYear - startYear + 1
@@ -206,7 +206,7 @@ extension SearchViewController: UIPickerViewDataSource, UIPickerViewDelegate {
             return 20
         }
     }
-
+    
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         if pickerView == datePicker {
             return "\(startYear + row)"
@@ -229,9 +229,4 @@ extension SearchViewController: UITextFieldDelegate {
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         return false
     }
-}
-
-// MARK: - Table View Data Source methods
-extension SearchViewController: UITableViewDelegate {
-    
 }

@@ -31,30 +31,4 @@ struct PilotModel : Decodable {
         self.date = date
         self.time = time
     }
-    
-    init(givenName: String, familyName: String, permanentNumber: String, url: String, raceName: String, season: String, round: String, raceUrl: String, date: String, time: String) {
-        self.raceName = raceName
-        self.givenName = givenName
-        self.familyName = familyName
-        self.permanentNumber = permanentNumber
-        self.url = url
-        self.season = season
-        self.round = round
-        self.raceUrl = raceUrl
-        self.date = date
-        self.time = time
-    }
-    
-    init() {
-        self.raceName = ""
-        self.givenName = ""
-        self.familyName = ""
-        self.permanentNumber = ""
-        self.url = ""
-        self.season = ""
-        self.round = ""
-        self.raceUrl = ""
-        self.date = ""
-        self.time = ""
-    }
  }
