@@ -28,28 +28,24 @@ struct Formula1ApiConstants {
 
 enum ApiRouter: URLRequestConvertible {
     
-    case getPilotsWinnersInSeason(year: String, limit: Int = 1000, offset: Int = 0)
+    case getPilotsInSeasonInRound(year: String, round: String)
     
-    case getPilotsWinnersInSeasonInRound(year: String, round: String, limit: Int = 1000, offset: Int = 0)
+    case getPilotsInSeason(year: String)
     
-    case getPilotsInSeasonInRound(year: String, round: String, limit: Int = 1000, offset: Int = 0)
+    case getSeasonList
     
-    case getPilotsInSeason(year: String, limit: Int = 1000, offset: Int = 0)
-    
-    case getSeasonList(limit: Int = 1000, offset: Int = 0)
+    case getPilotsInSeasonOnPosition(year: String, position: String)
     
     private var path: String {
         switch self {
-        case .getPilotsWinnersInSeason(year: let year, limit: _, offset: _):
-            return "api/f1/\(year)/results/1.json"
-        case .getPilotsWinnersInSeasonInRound(year: let year, round: let round, limit: _, offset: _):
-            return "api/f1/\(year)/\(round)/results/1.json"
-        case .getPilotsInSeason(year: let year, limit: _, offset: _):
+        case .getPilotsInSeason(year: let year):
             return "api/f1/\(year)/results.json"
-        case .getPilotsInSeasonInRound(year: let year, round: let round, limit: _, offset: _):
+        case .getPilotsInSeasonInRound(year: let year, round: let round):
             return "api/f1/\(year)/\(round)/results.json"
-        case .getSeasonList(limit: _, offset: _):
+        case .getSeasonList:
             return "api/f1/seasons.json"
+        case .getPilotsInSeasonOnPosition(year: let year, position: let position):
+            return "api/f1/\(year)/results/\(position).json"
         }
     }
     
@@ -63,16 +59,8 @@ enum ApiRouter: URLRequestConvertible {
     private var parameters: Parameters? {
         switch self {
         
-        case .getPilotsWinnersInSeason(year: _, limit: let limit, offset: let offset):
-            return [Formula1ApiConstants.Parameters.limit : limit, Formula1ApiConstants.Parameters.offset: offset]
-        case .getPilotsWinnersInSeasonInRound(year: _, round: _, limit: let limit, offset: let offset):
-            return [Formula1ApiConstants.Parameters.limit : limit, Formula1ApiConstants.Parameters.offset: offset]
-        case .getPilotsInSeasonInRound(year: _, round: _, limit: let limit, offset: let offset):
-            return [Formula1ApiConstants.Parameters.limit : limit, Formula1ApiConstants.Parameters.offset: offset]
-        case .getPilotsInSeason(year: _, limit: let limit, offset: let offset):
-            return [Formula1ApiConstants.Parameters.limit : limit, Formula1ApiConstants.Parameters.offset: offset]
-        case .getSeasonList(limit: let limit, offset: let offset):
-            return [Formula1ApiConstants.Parameters.limit : limit, Formula1ApiConstants.Parameters.offset: offset]
+        default:
+            return [Formula1ApiConstants.Parameters.limit : 1000, Formula1ApiConstants.Parameters.offset: 0]
         }
     }
     

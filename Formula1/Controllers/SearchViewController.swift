@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SearchViewController: UIViewController, UITableViewDelegate, UIPickerViewDelegate {
+class SearchViewController: UIViewController, UITableViewDelegate {
     
     private let stackView = UIStackView()
     
@@ -25,7 +25,7 @@ class SearchViewController: UIViewController, UITableViewDelegate, UIPickerViewD
     
     private let datePicker = UIPickerView()
     
-    private let roundTextField: UITextField = {
+    private let positionTextField: UITextField = {
         let tf = UITextField()
         tf.translatesAutoresizingMaskIntoConstraints = false
         tf.textAlignment = .center
@@ -41,13 +41,13 @@ class SearchViewController: UIViewController, UITableViewDelegate, UIPickerViewD
         return tableView
     }()
     
+    private let positionPicker = UIPickerView()
+    
     private let disposeBag = DisposeBag()
     
     private let pilotsViewModel = PilotsViewModel()
     
     private let seasonViewModel = SeasonViewModel()
-    
-    private let roundPicker = UIPickerView()
     
     let currentYear = Calendar.current.component(.year, from: Date())
     
@@ -56,8 +56,10 @@ class SearchViewController: UIViewController, UITableViewDelegate, UIPickerViewD
         super.viewDidLoad()
         configureUI()
         
+        positionPicker.delegate = self
+        positionPicker.dataSource = self
         dateTextField.delegate = self
-        roundTextField.delegate = self
+        positionTextField.delegate = self
         
         tableView.rx.setDelegate(self).disposed(by: disposeBag)
         tableView.register(Formula1Cell.self, forCellReuseIdentifier: K.CellIdentifier.formula1Cell)
@@ -65,10 +67,10 @@ class SearchViewController: UIViewController, UITableViewDelegate, UIPickerViewD
         bindTableView()
         bindRowSelected()
         bindDatePickerView()
-        bindRoundPickerView()
+        bindPositionPickerView()
         
         pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
-        seasonViewModel.fetchData(apiRouterCase: .getSeasonList())
+        seasonViewModel.fetchData(apiRouterCase: .getSeasonList)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -126,18 +128,11 @@ class SearchViewController: UIViewController, UITableViewDelegate, UIPickerViewD
             .disposed(by: disposeBag)
     }
     
-    private func bindRoundPickerView() {
-        pilotsViewModel.numberOfRounds.asObservable()
-            .bind(to: roundPicker.rx.itemTitles) { [weak self](row, element) in
-                guard self != nil else { return nil }
-                return element == 0 ? "All rounds" : String(element)
-        }
-            .disposed(by: disposeBag)
-        
-        roundPicker.rx.itemSelected
+    private func bindPositionPickerView() {
+        positionPicker.rx.itemSelected
             .subscribe(onNext: { [weak self] item in
                 guard let self = self else { return }
-                self.roundTextField.text = item.row == 0 ? "All rounds" : String(item.row)
+                self.positionTextField.text = item.row == 0 ? "All positions" : String(item.row)
             })
             .disposed(by: disposeBag)
     }
@@ -148,7 +143,7 @@ extension SearchViewController {
     private func configureUI() {
         configureStackView()
         createDatePicker()
-        createRoundPicker()
+        createPositionPicker()
         configureTableView()
     }
     
@@ -173,10 +168,12 @@ extension SearchViewController {
         datePicker.translatesAutoresizingMaskIntoConstraints = false
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
+        toolBar.barStyle = UIBarStyle.default
+        toolBar.isTranslucent = true
         toolBar.translatesAutoresizingMaskIntoConstraints = false
-        
+
         let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(endPickingDate))
-        toolBar.setItems([doneBtn], animated: true)
+        toolBar.setItems([doneBtn], animated: false)
         dateTextField.inputAccessoryView = toolBar
         dateTextField.inputView = datePicker
         
@@ -188,25 +185,25 @@ extension SearchViewController {
         self.view.endEditing(true)
     }
     
-    private func createRoundPicker() {
-        stackView.addArrangedSubview(roundTextField)
+    private func createPositionPicker() {
+        stackView.addArrangedSubview(positionTextField)
         
-        roundPicker.translatesAutoresizingMaskIntoConstraints = false
+        positionPicker.translatesAutoresizingMaskIntoConstraints = false
         let toolBar = UIToolbar()
         toolBar.sizeToFit()
         toolBar.translatesAutoresizingMaskIntoConstraints = false
         
-        let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(endPickingRound))
+        let doneBtn = UIBarButtonItem(barButtonSystemItem: .done, target: nil, action: #selector(endPickingPosition))
         toolBar.setItems([doneBtn], animated: true)
-        roundTextField.inputAccessoryView = toolBar
-        roundTextField.inputView = roundPicker
+        positionTextField.inputAccessoryView = toolBar
+        positionTextField.inputView = positionPicker
         
-        roundTextField.text = "All rounds"
+        positionTextField.text = "All positions"
     }
     
-    @objc private func endPickingRound() {
-        if roundTextField.text != "All rounds" {
-            pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: dateTextField.text ?? String(currentYear), round: roundTextField.text ?? "1"))
+    @objc private func endPickingPosition() {
+        if positionTextField.text != "All positions" {
+            pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeasonOnPosition(year: dateTextField.text ?? String(currentYear), position: positionTextField.text ?? "1"))
         } else {
             pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
         }
@@ -224,6 +221,20 @@ extension SearchViewController {
         ])
         
         tableView.contentInset.bottom = view.safeAreaInsets.bottom
+    }
+}
+
+extension SearchViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return 13
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return row == 0 ? "All positions" : String(row)
     }
 }
 

@@ -32,7 +32,7 @@ class PilotsViewController: UIViewController, UITableViewDelegate {
         bindTableView()
         bindRowSelected()
         
-        viewModel.fetchData(apiRouterCase: .getPilotsWinnersInSeason(year: "2020"))
+        viewModel.fetchData(apiRouterCase: .getPilotsInSeasonOnPosition(year: "2020", position: "1"))
     }
     
     override func viewWillAppear(_ animated: Bool) {
