@@ -24,18 +24,22 @@ class HeaderView: UIView {
     private let topLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
-        lbl.font = UIFont.systemFont(ofSize: 22, weight: .bold)
+        lbl.font = UIFont.systemFont(ofSize: 20, weight: .bold)
         lbl.numberOfLines = 0
         lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.allowsDefaultTighteningForTruncation = true
+        lbl.minimumScaleFactor = 0.5
         return lbl
     }()
     
     private let bottomLabel: UILabel = {
         let lbl = UILabel()
         lbl.textColor = .black
-        lbl.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        lbl.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         lbl.numberOfLines = 0
         lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.allowsDefaultTighteningForTruncation = true
+        lbl.minimumScaleFactor = 0.5
         return lbl
     }()
     
@@ -50,7 +54,6 @@ class HeaderView: UIView {
     }()
     
     private func layout() {
-        
         backgroundColor = .white
         
         let verticalStackView = UIStackView(arrangedSubviews: [topLabel, bottomLabel])
@@ -88,4 +91,3 @@ class HeaderView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 }
-

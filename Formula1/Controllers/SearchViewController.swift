@@ -9,7 +9,7 @@ import UIKit
 import RxSwift
 import RxCocoa
 
-class SearchViewController: UIViewController, UITableViewDelegate {
+class SearchViewController: UIViewController, UITableViewDelegate, UIPickerViewDelegate {
     
     private let stackView = UIStackView()
     
@@ -43,25 +43,18 @@ class SearchViewController: UIViewController, UITableViewDelegate {
     
     private let disposeBag = DisposeBag()
     
-    private let viewModel = PilotsViewModel()
+    private let pilotsViewModel = PilotsViewModel()
+    
+    private let seasonViewModel = SeasonViewModel()
     
     private let roundPicker = UIPickerView()
     
-    // TODO: - Harcoded part!
-    let startYear = 1950
     let currentYear = Calendar.current.component(.year, from: Date())
-    var numberOfRounds = 10
     
     // MARK: - VC Lifecycle Methods
     override func viewDidLoad() {
         super.viewDidLoad()
         configureUI()
-        
-        datePicker.dataSource = self
-        datePicker.delegate = self
-        
-        roundPicker.dataSource = self
-        roundPicker.delegate = self
         
         dateTextField.delegate = self
         roundTextField.delegate = self
@@ -71,8 +64,11 @@ class SearchViewController: UIViewController, UITableViewDelegate {
         
         bindTableView()
         bindRowSelected()
+        bindDatePickerView()
+        bindRoundPickerView()
         
-        viewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: dateTextField.text ?? "1950", round: roundTextField.text ?? "1"))
+        pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
+        seasonViewModel.fetchData(apiRouterCase: .getSeasonList())
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -86,29 +82,63 @@ class SearchViewController: UIViewController, UITableViewDelegate {
     }
     
     private func bindTableView() {
-        viewModel.pilots.asObservable().bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { (row,item,cell) in
-            cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
-            cell.bottomLabelText = item.raceName
-            cell.accessoryType = .disclosureIndicator
-        }
-        .disposed(by: disposeBag)
+        pilotsViewModel.pilots.asObservable()
+            .bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { [weak self](row,item,cell) in
+                guard self != nil else { return }
+                cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
+                cell.bottomLabelText = item.raceName
+                cell.accessoryType = .disclosureIndicator
+            }.disposed(by: disposeBag)
     }
     
     private func bindRowSelected() {
         tableView.rx.modelSelected(PilotModel.self)
-            .subscribe(onNext: { item in
-                print(item)
+            .subscribe(onNext: { [weak self] item in
+                guard let self = self else { return }
                 let vc = DetailsViewController(year: item.season, round: item.round)
                 self.navigationController?.pushViewController(vc, animated: true)
             })
             .disposed(by: disposeBag)
         
         tableView.rx.itemSelected
-            .subscribe { (indexPath) in
+            .subscribe { [weak self](indexPath) in
+                guard let self = self else { return }
                 if let ip = indexPath.element {
                     self.tableView.deselectRow(at: ip, animated: true)
                 }
             }
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindDatePickerView() {
+        seasonViewModel.seasons.asObservable()
+            .bind(to: datePicker.rx.itemTitles) { [weak self](row, element) in
+                guard self != nil else { return nil}
+                return element.season
+        }
+            .disposed(by: disposeBag)
+        
+        datePicker.rx.itemSelected
+            .subscribe(onNext: { [weak self](row, value) in
+                guard let self = self else { return }
+                self.dateTextField.text = self.seasonViewModel.seasons.value[row].season
+        })
+            .disposed(by: disposeBag)
+    }
+    
+    private func bindRoundPickerView() {
+        pilotsViewModel.numberOfRounds.asObservable()
+            .bind(to: roundPicker.rx.itemTitles) { [weak self](row, element) in
+                guard self != nil else { return nil }
+                return element == 0 ? "All rounds" : String(element)
+        }
+            .disposed(by: disposeBag)
+        
+        roundPicker.rx.itemSelected
+            .subscribe(onNext: { [weak self] item in
+                guard let self = self else { return }
+                self.roundTextField.text = item.row == 0 ? "All rounds" : String(item.row)
+            })
             .disposed(by: disposeBag)
     }
 }
@@ -150,11 +180,11 @@ extension SearchViewController {
         dateTextField.inputAccessoryView = toolBar
         dateTextField.inputView = datePicker
         
-        dateTextField.text = "\(startYear)"
+        dateTextField.text = "\(currentYear)"
     }
     
-    @objc func endPickingDate() {
-        viewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: dateTextField.text ?? "1950", round: roundTextField.text ?? "1"))
+    @objc private func endPickingDate() {
+        pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
         self.view.endEditing(true)
     }
     
@@ -171,11 +201,15 @@ extension SearchViewController {
         roundTextField.inputAccessoryView = toolBar
         roundTextField.inputView = roundPicker
         
-        roundTextField.text = "1"
+        roundTextField.text = "All rounds"
     }
     
-    @objc func endPickingRound() {
-        viewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: dateTextField.text ?? "1950", round: roundTextField.text ?? "1"))
+    @objc private func endPickingRound() {
+        if roundTextField.text != "All rounds" {
+            pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: dateTextField.text ?? String(currentYear), round: roundTextField.text ?? "1"))
+        } else {
+            pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
+        }
         self.view.endEditing(true)
     }
     
@@ -190,37 +224,6 @@ extension SearchViewController {
         ])
         
         tableView.contentInset.bottom = view.safeAreaInsets.bottom
-    }
-}
-
-// MARK: - Picker View Data Source and Delegates methods
-extension SearchViewController: UIPickerViewDataSource, UIPickerViewDelegate {
-    func numberOfComponents(in pickerView: UIPickerView) -> Int {
-        return 1
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        if pickerView == datePicker {
-            return currentYear - startYear + 1
-        } else {
-            return 20
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        if pickerView == datePicker {
-            return "\(startYear + row)"
-        } else {
-            return "\(row + 1)"
-        }
-    }
-    
-    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        if pickerView == datePicker {
-            dateTextField.text = "\(startYear + row)"
-        } else {
-            roundTextField.text = "\(row + 1)"
-        }
     }
 }
 

@@ -48,6 +48,19 @@ struct RData: Decodable {
     let total: String
 }
 
-struct MRData: Decodable {
-    let MRData: RData
+struct Season: Decodable {
+    let season: String
+}
+
+struct SeasonTable: Decodable {
+    let Seasons: [Season]
+}
+
+struct SData: Decodable {
+    let SeasonTable: SeasonTable
+    let total: String
+}
+
+struct MRData<T: Decodable>: Decodable {
+    let MRData: T
 }

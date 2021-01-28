@@ -9,7 +9,7 @@ import Foundation
 import Alamofire
 import RxSwift
 
-class ApiClient {
+class NetworkService {
     
     public static func request<T: Decodable>(
         _ urlConvertible: URLRequestConvertible,

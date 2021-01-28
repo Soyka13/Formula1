@@ -37,6 +37,8 @@ enum ApiRouter: URLRequestConvertible {
     
     case getPilotsInSeason(year: String, limit: Int = 1000, offset: Int = 0)
     
+    case getSeasonList(limit: Int = 1000, offset: Int = 0)
+    
     private var path: String {
         switch self {
         case .getPilotsWinnersInSeason(year: let year, limit: _, offset: _):
@@ -47,6 +49,8 @@ enum ApiRouter: URLRequestConvertible {
             return "api/f1/\(year)/results.json"
         case .getPilotsInSeasonInRound(year: let year, round: let round, limit: _, offset: _):
             return "api/f1/\(year)/\(round)/results.json"
+        case .getSeasonList(limit: _, offset: _):
+            return "api/f1/seasons.json"
         }
     }
     
@@ -67,6 +71,8 @@ enum ApiRouter: URLRequestConvertible {
         case .getPilotsInSeasonInRound(year: _, round: _, limit: let limit, offset: let offset):
             return [Formula1ApiConstants.Parameters.limit : limit, Formula1ApiConstants.Parameters.offset: offset]
         case .getPilotsInSeason(year: _, limit: let limit, offset: let offset):
+            return [Formula1ApiConstants.Parameters.limit : limit, Formula1ApiConstants.Parameters.offset: offset]
+        case .getSeasonList(limit: let limit, offset: let offset):
             return [Formula1ApiConstants.Parameters.limit : limit, Formula1ApiConstants.Parameters.offset: offset]
         }
     }

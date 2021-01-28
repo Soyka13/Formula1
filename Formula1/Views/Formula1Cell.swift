@@ -27,6 +27,8 @@ class Formula1Cell: UITableViewCell {
         lbl.font = UIFont.systemFont(ofSize: 18)
         lbl.numberOfLines = 0
         lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.allowsDefaultTighteningForTruncation = true
+        lbl.minimumScaleFactor = 0.5
         return lbl
     }()
     
@@ -36,6 +38,8 @@ class Formula1Cell: UITableViewCell {
         lbl.font = UIFont.systemFont(ofSize: 16)
         lbl.numberOfLines = 0
         lbl.translatesAutoresizingMaskIntoConstraints = false
+        lbl.allowsDefaultTighteningForTruncation = true
+        lbl.minimumScaleFactor = 0.5
         return lbl
     }()
     

@@ -36,9 +36,9 @@ class DetailsViewController: UIViewController, UITableViewDelegate {
     var round = ""
     var year = ""
     
-    var viewModel = PilotsViewModel()
+    private var viewModel = PilotsViewModel()
     
-    let disposeBag = DisposeBag()
+    private let disposeBag = DisposeBag()
     
     init(year: String, round: String) {
         self.year = year
@@ -68,8 +68,9 @@ class DetailsViewController: UIViewController, UITableViewDelegate {
         viewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: year, round: round))
     }
     
-    func bindTableView() {
-        viewModel.pilots.asObservable().bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { (row,item,cell) in
+    private func bindTableView() {
+        viewModel.pilots.asObservable().bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { [weak self](row,item,cell) in
+            guard let self = self else { return }
             self.topView.topLabelText = item.raceName + "-" + item.round
             self.topView.bottomLabelText = item.raceName + "   " + item.date
             cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
@@ -81,7 +82,8 @@ class DetailsViewController: UIViewController, UITableViewDelegate {
     
     private func bindRowSelected() {
         tableView.rx.modelSelected(PilotModel.self)
-            .subscribe(onNext: { item in
+            .subscribe(onNext: { [weak self]item in
+                guard let self = self else { return }
                 let config = SFSafariViewController.Configuration()
                 config.entersReaderIfAvailable = true
                 
@@ -91,7 +93,8 @@ class DetailsViewController: UIViewController, UITableViewDelegate {
             .disposed(by: disposeBag)
         
         tableView.rx.itemSelected
-            .subscribe { (indexPath) in
+            .subscribe { [weak self](indexPath) in
+                guard let self = self else { return }
                 if let ip = indexPath.element {
                     self.tableView.deselectRow(at: ip, animated: true)
                 }
@@ -99,8 +102,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate {
             .disposed(by: disposeBag)
     }
     
-    @objc func handleTap(_ sender: UITapGestureRecognizer? = nil) {
-        print("!!!!! Touchhhh")
+    @objc private func handleTap(_ sender: UITapGestureRecognizer? = nil) {
         let config = SFSafariViewController.Configuration()
         config.entersReaderIfAvailable = true
         
