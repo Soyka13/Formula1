@@ -7,7 +7,6 @@
 
 import Foundation
 import Alamofire
-import RxSwift
 
 struct Formula1ApiConstants {
     static let baseURL = "https://ergast.com/"
