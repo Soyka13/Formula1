@@ -11,9 +11,9 @@ import Alamofire
 struct Formula1ApiConstants {
     static let baseURL = "https://ergast.com/"
     
-    struct Parameters {
-        static let limit = "limit"
-        static let offset = "offset"
+    enum Parameters: String {
+        case limit = "limit"
+        case offset = "offset"
     }
     
     enum HttpHeaderField: String {
@@ -60,7 +60,7 @@ enum ApiRouter: URLRequestConvertible {
         switch self {
         
         default:
-            return [Formula1ApiConstants.Parameters.limit : 1000, Formula1ApiConstants.Parameters.offset: 0]
+            return [Formula1ApiConstants.Parameters.limit.rawValue : 1000, Formula1ApiConstants.Parameters.offset.rawValue: 0]
         }
     }
     
