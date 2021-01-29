@@ -65,7 +65,7 @@ class DetailsViewController: UIViewController, UITableViewDelegate {
         bindTableView()
         bindRowSelected()
         
-        viewModel.fetchData(apiRouterCase: .getPilotsInSeasonInRound(year: year, round: round))
+        viewModel.fetchData(request: .getPilotsInSeasonInRound(year: year, round: round))
     }
     
     private func bindTableView() {

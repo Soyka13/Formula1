@@ -10,11 +10,11 @@ import Alamofire
 
 class NetworkService {
     
-    public static func request<T: Decodable>(
-        _ urlConvertible: URLRequestConvertible,
+    public static func perform<T: Decodable>(
+        _ request: Requestable,
         completion: @escaping (Result<T, ApiError>) -> Void
     ) {
-        AF.request(urlConvertible).responseData { (response) in
+        AF.request(request).responseData { (response) in
             
             let decoder = JSONDecoder()
             

@@ -69,8 +69,8 @@ class SearchViewController: UIViewController, UITableViewDelegate {
         bindDatePickerView()
         bindPositionPickerView()
         
-        pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
-        seasonViewModel.fetchData(apiRouterCase: .getSeasonList)
+        pilotsViewModel.fetchData(request: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
+        seasonViewModel.fetchData(request: .getSeasonList)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -181,7 +181,7 @@ extension SearchViewController {
     }
     
     @objc private func endPickingDate() {
-        pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
+        pilotsViewModel.fetchData(request: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
         self.view.endEditing(true)
     }
     
@@ -203,9 +203,9 @@ extension SearchViewController {
     
     @objc private func endPickingPosition() {
         if positionTextField.text != "All positions" {
-            pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeasonOnPosition(year: dateTextField.text ?? String(currentYear), position: positionTextField.text ?? "1"))
+            pilotsViewModel.fetchData(request: .getPilotsInSeasonOnPosition(year: dateTextField.text ?? String(currentYear), position: positionTextField.text ?? "1"))
         } else {
-            pilotsViewModel.fetchData(apiRouterCase: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
+            pilotsViewModel.fetchData(request: .getPilotsInSeason(year: dateTextField.text ?? String(currentYear)))
         }
         self.view.endEditing(true)
     }

@@ -12,8 +12,8 @@ import RxCocoa
 class PilotsViewModel {
     let pilots: BehaviorRelay<[PilotModel]> = BehaviorRelay(value: [])
     
-    func fetchData(apiRouterCase: Request) {
-        NetworkService.request(apiRouterCase) { [weak self](response: Result<MRData<RData>, ApiError>) in
+    func fetchData(request: Request) {
+        NetworkService.perform(request) { [weak self](response: Result<MRData<RData>, ApiError>) in
             guard let self = self else { return }
             switch response {
             
