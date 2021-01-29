@@ -8,6 +8,12 @@
 import Foundation
 import Alamofire
 
+protocol Requestable: URLRequestConvertible {
+    var method: HTTPMethod { get }
+    var path: String { get }
+    var parameters: Parameters? { get }
+}
+
 struct Formula1ApiConstants {
     static let baseURL = "https://ergast.com/"
     
@@ -26,7 +32,7 @@ struct Formula1ApiConstants {
     }
 }
 
-enum ApiRouter: URLRequestConvertible {
+enum Request: Requestable {
     
     case getPilotsInSeasonInRound(year: String, round: String)
     
@@ -36,7 +42,7 @@ enum ApiRouter: URLRequestConvertible {
     
     case getPilotsInSeasonOnPosition(year: String, position: String)
     
-    private var path: String {
+    var path: String {
         switch self {
         case .getPilotsInSeason(year: let year):
             return "api/f1/\(year)/results.json"
@@ -49,14 +55,14 @@ enum ApiRouter: URLRequestConvertible {
         }
     }
     
-    private var method: HTTPMethod {
+    var method: HTTPMethod {
         switch self {
         default:
             return .get
         }
     }
     
-    private var parameters: Parameters? {
+    var parameters: Parameters? {
         switch self {
         
         default:
