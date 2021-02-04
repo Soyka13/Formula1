@@ -84,21 +84,15 @@ class DetailsViewController: UIViewController, UITableViewDelegate {
         tableView.rx.modelSelected(PilotModel.self)
             .subscribe(onNext: { [weak self]item in
                 guard let self = self else { return }
+                if let ip = self.tableView.indexPathForSelectedRow {
+                    self.tableView.deselectRow(at: ip, animated: true)
+                }
                 let config = SFSafariViewController.Configuration()
                 config.entersReaderIfAvailable = true
                 
                 let vc = SFSafariViewController(url: URL(string: item.url)!, configuration: config)
                 self.present(vc, animated: true)
             })
-            .disposed(by: disposeBag)
-        
-        tableView.rx.itemSelected
-            .subscribe { [weak self](indexPath) in
-                guard let self = self else { return }
-                if let ip = indexPath.element {
-                    self.tableView.deselectRow(at: ip, animated: true)
-                }
-            }
             .disposed(by: disposeBag)
     }
     

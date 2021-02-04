@@ -85,8 +85,7 @@ class SearchViewController: UIViewController, UITableViewDelegate {
     
     private func bindTableView() {
         pilotsViewModel.pilots.asObservable()
-            .bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { [weak self](row,item,cell) in
-                guard self != nil else { return }
+            .bind(to: tableView.rx.items(cellIdentifier: K.CellIdentifier.formula1Cell, cellType: Formula1Cell.self)) { (row,item,cell) in
                 cell.topLabelText = "\(item.givenName) \(item.familyName) \(item.permanentNumber)"
                 cell.bottomLabelText = item.raceName
                 cell.accessoryType = .disclosureIndicator
@@ -97,25 +96,18 @@ class SearchViewController: UIViewController, UITableViewDelegate {
         tableView.rx.modelSelected(PilotModel.self)
             .subscribe(onNext: { [weak self] item in
                 guard let self = self else { return }
+                if let ip = self.tableView.indexPathForSelectedRow {
+                    self.tableView.deselectRow(at: ip, animated: true)
+                }
                 let vc = DetailsViewController(year: item.season, round: item.round)
                 self.navigationController?.pushViewController(vc, animated: true)
             })
-            .disposed(by: disposeBag)
-        
-        tableView.rx.itemSelected
-            .subscribe { [weak self](indexPath) in
-                guard let self = self else { return }
-                if let ip = indexPath.element {
-                    self.tableView.deselectRow(at: ip, animated: true)
-                }
-            }
             .disposed(by: disposeBag)
     }
     
     private func bindDatePickerView() {
         seasonViewModel.seasons.asObservable()
-            .bind(to: datePicker.rx.itemTitles) { [weak self](row, element) in
-                guard self != nil else { return nil}
+            .bind(to: datePicker.rx.itemTitles) { (row, element) in
                 return element.season
         }
             .disposed(by: disposeBag)
